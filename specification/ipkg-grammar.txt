@@ -1,0 +1,21 @@
+pkg         ::= <pkg-dec> <pkg-content>;
+pkg-dec     ::= 'package' <string> ;
+pkg-content ::= <modules> <rest>? ;
+rest        ::= <sdir> | <exe> | <opts> | <make> | <libs> | <objs> | <main>
+
+modules     ::= 'modules' <valuelist>
+
+sdir        ::= 'sourcedir' <valuestr>
+exe         ::= 'executable' <valuestr>
+main        ::= 'main' <valuestr>
+opts        ::= 'opts' <valuestrlit>
+
+make        ::= 'makefile' <valuestr>
+libs        ::= 'libs' <valuelist>
+objs        ::= 'objs' <valuelist>
+
+valuestrlit ::= '=' <stringliteral> 
+valuestr    ::= '=' <string>
+valuelist   ::= '=' <string> (',' <string>)+
+
+

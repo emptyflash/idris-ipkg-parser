@@ -1,0 +1,13 @@
+package ipkgparser
+
+opts       = "-p lightyear"
+
+sourcedir  = src
+
+executable = idrisPkgParser
+main       = Main
+
+modules    = Main,
+
+             IPkgParser
+          
