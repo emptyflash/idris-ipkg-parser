@@ -1,6 +1,11 @@
 package ipkgparser
 
-modules    = Main, IPkgParser
+modules    = Main,
+
+             IPkgParser,
+             IPkgParser.EntryParser,
+             IPkgParser.Model,
+             IPkgParser.Utils
 
 opts       = "-p lightyear"
 
