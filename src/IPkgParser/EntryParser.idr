@@ -54,7 +54,6 @@ parseIPkgEntry = do
     "libs" => do
       ls <- sepBy1 filepath comma
       pure $ IPkgLibs ls
-  --parseIPkgEntry' <$ space
-                 <?> "Lexing Contents"
+  <?> "iPkg Entries"
 
 -- --------------------------------------------------------------------- [ EOF ]

@@ -34,11 +34,11 @@ specialChar = do
     '\\' => pure '\\'
     '/'  => pure '/'
     '.'  => pure '.'
-    _    => satisfy (const False) <?> "expected special path char"
+    _    => satisfy (const False)
 
 private
 pathChar : Parser Char
-pathChar = specialChar <|> satisfy isAlpha <?> "Char in FilePath" 
+pathChar = specialChar <|> satisfy isAlpha 
 
 filepath : Parser String
 filepath = map pack (some pathChar) <$ space
@@ -50,9 +50,7 @@ private
 lit : Char -> Char -> Parser String
 lit l r = char l $> (map pack . many $ satisfy (/= r)) <$ char r
 
-
 stringLiteral : Parser String
 stringLiteral = lit '"' '"' <?> "string literal"
-
 
 -- --------------------------------------------------------------------- [ EOF ]
