@@ -1,8 +1,5 @@
 # iPkg parser
 
-A naive package file parser for Idris written in idris using lightyear.
+A na\"{i}ve package file parser for Idris Packages written in Idris using lightyear.
 
-## Caveats
-
-+ No support for the dot separator within the list of Modules.
 

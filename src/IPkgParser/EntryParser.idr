@@ -15,99 +15,46 @@ import IPkgParser.Utils
 
 %access public
 
-
 parseIPkgDec : Parser IPackageEntry
 parseIPkgDec = do
   string "package"
   space
-  name <- stringLiteral
-  pure $ IPkgName name
+  name <- identifier
+  pure (IPkgName name)
   <?> "Package Declaration"
 
--- Parse List Style Entries
-  
-parseIPkgModules : Parser IPackageEntry
-parseIPkgModules = do
-  string "modules"
+parseIPkgEntry : Parser IPackageEntry
+parseIPkgEntry = do
+  e <- identifier
   space
   equals
   space
-  ms <- sepBy1 stringLiteral comma
-  pure $ IPkgModules ms
-  <?> "Modules"
-  
-parseIPkgLibs : Parser IPackageEntry
-parseIPkgLibs = do
-  string "libs"
-  space
-  equals
-  space
-  ls <- sepBy1 stringLiteral comma
-  pure $ IPkgLibs ls
-  <?> "Libraries"
-
-parseIPkgObjs : Parser IPackageEntry
-parseIPkgObjs = do
-  string "objs"
-  space
-  equals
-  space
-  os <- sepBy1 stringLiteral comma
-  pure $ IPkgObjs os
-  <?> "Objects"
-
--- Parse Key String entries
-
-parseIPkgSDir : Parser IPackageEntry
-parseIPkgSDir = do
-  string "sourcedir"
-  space
-  equals
-  space
-  dir <- stringLiteral
-  pure $ IPkgSrcDir dir
-  <?> "Source Dir"
-
-parseIPkgExe : Parser IPackageEntry
-parseIPkgExe = do
-  string "executable"
-  space
-  equals
-  space
-  name <- stringLiteral
-  pure $ IPkgExe name
-  <?> "Exe Name"
-
-parseIPkgMain : Parser IPackageEntry
-parseIPkgMain = do
-  string "main"
-  space
-  equals
-  space
-  func <- stringLiteral
-  pure $ IPkgMain func
-  <?> "Main Function"
-
-parseIPkgMake : Parser IPackageEntry
-parseIPkgMake = do
-  string "makefile"
-  space
-  equals
-  space
-  fname <- stringLiteral
-  pure $ IPkgMake fname
-  <?> "Makefile"
-
--- Parse Key String Literal Entries
-
-parseIPkgOpts : Parser IPackageEntry
-parseIPkgOpts = do
-  string "opts"
-  space
-  equals
-  space
-  opts <- parseQuotedString
-  pure $ IPkgOpts opts
-  <?> "Build Opts"
+  case e of
+    "main" => do
+      fname <- identifier
+      pure $ IPkgMain fname
+    "opts" => do
+      opts <- stringLiteral
+      pure $ IPkgOpts opts
+    "makefile" => do
+      fname <- identifier
+      pure $ IPkgMake fname
+    "executable" => do
+      name <- identifier
+      pure $ IPkgExe name
+    "sourcedir" => do
+      dir <- identifier
+      pure $ IPkgSrcDir dir
+    "modules" => do
+      ms <- sepBy1 filepath comma
+      pure $ IPkgModules ms
+    "objs" => do
+      os <- sepBy1 filepath comma
+      pure $ IPkgObjs os
+    "libs" => do
+      ls <- sepBy1 filepath comma
+      pure $ IPkgLibs ls
+  --parseIPkgEntry' <$ space
+                 <?> "Lexing Contents"
 
 -- --------------------------------------------------------------------- [ EOF ]

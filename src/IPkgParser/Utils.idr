@@ -12,9 +12,9 @@ import Lightyear.Strings
 
 %access public
 
-stringLiteral : Parser String
-stringLiteral = map pack (some (satisfy isAlpha)) <$ space
-              <?> "String"
+identifier : Parser String
+identifier = map pack (some (satisfy isAlpha)) <$ space
+             <?> "Identifier"
 
 comma : Parser ()
 comma = char ',' <$ space
@@ -24,18 +24,35 @@ equals : Parser ()
 equals = char '=' <$ space
          <?> "comma"
 
--- The following is 'inspired' from JSon.idr in lightyear examples
+-- Inspired by Json.idr in Lightyear examples
 
 private
-stringContents : Parser (List Char)
-stringContents = (char '"' $!> pure []) <|> do
-  c <- satisfy (/='"')
-  map (c::) stringContents
-  <?> "String Literal Contents"
+specialChar : Parser Char
+specialChar = do
+  c <- satisfy (const True)
+  case c of
+    '\\' => pure '\\'
+    '/'  => pure '/'
+    '.'  => pure '.'
+    _    => satisfy (const False) <?> "expected special path char"
 
--- Parse anything in between the quotes
-parseQuotedString : Parser String
-parseQuotedString = char '"' >! map pack stringContents
-                     <?> "String Literal"
+private
+pathChar : Parser Char
+pathChar = specialChar <|> satisfy isAlpha <?> "Char in FilePath" 
+
+filepath : Parser String
+filepath = map pack (some pathChar) <$ space
+         <?> "filepath"
+
+-- The following is 'inspired' from Bibdris
+
+private
+lit : Char -> Char -> Parser String
+lit l r = char l $> (map pack . many $ satisfy (/= r)) <$ char r
+
+
+stringLiteral : Parser String
+stringLiteral = lit '"' '"' <?> "string literal"
+
 
 -- --------------------------------------------------------------------- [ EOF ]
