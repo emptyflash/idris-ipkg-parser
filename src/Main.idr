@@ -1,3 +1,9 @@
+-- ---------------------------------------------------------------- [ Main.idr ]
+-- Module      : Main
+-- Description : Sample usage of iPkg file parser.
+-- Copyright   : (c) Jan de Muijnck-Hughes
+-- License     : see LICENSE
+-- --------------------------------------------------------------------- [ EOH ]
 module Main
 
 import System

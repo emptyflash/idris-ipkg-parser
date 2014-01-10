@@ -14,8 +14,6 @@ make        ::= 'makefile' <valuestr>
 libs        ::= 'libs' <valuelist>
 objs        ::= 'objs' <valuelist>
 
-valuestrlit ::= '=' <stringliteral> 
-valuestr    ::= '=' <string>
-valuelist   ::= '=' <string> (',' <string>)+
-
-
+valuestrlit ::= '=' '"' <stuff> '"' 
+valuestr    ::= '=' <stringLiteral>
+valuelist   ::= '=' <stringLiteral> (',' <stringLiteral>)+

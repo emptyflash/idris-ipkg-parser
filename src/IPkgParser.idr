@@ -1,77 +1,45 @@
--- ----------------------------------------------- [ Idris Package File Parser ]
--- A package file parser for Idris
+-- ---------------------------------------------------------- [ IPkgParser.idr ]
+-- Module      : IPkgParser
+-- Description : A package file parser for Idris
+-- Copyright   : (c) Jan de Muijnck-Hughes
+-- License     : see LICENSE
+-- --------------------------------------------------------------------- [ EOH ]
 module IPkgParser
 
 import Lightyear.Core
 import Lightyear.Combinators
 import Lightyear.Strings
 
-import Data.SortedMap
+import IPkgParser.Model
+import IPkgParser.EntryParser
 
 %access public
 
--- ------------------------------------------------------------------- [ Types ]
--- Entries found within a iPkg file.
-data IPackageEntry = IPkgName String
-                   | IPkgModules (List String)
-                   | IPkgSrcDir String
-                   | IPkgExe String
-                   | IPkgMain String
-                   | IPkgOpts String
-                   | IPkgMake String
-                   | IPkgLibs (List String)
-                   | IPkgObjs (List String)
-
-showIPackageEntry : IPackageEntry -> String
-showIPackageEntry (IPkgName x)     = "package " ++ show x
-showIPackageEntry (IPkgModules xs) = "modules = " ++ show xs
-showIPackageEntry (IPkgSrcDir x)   = "sourcedir = " ++ show x
-showIPackageEntry (IPkgExe x)      = "executable = " ++ show x
-showIPackageEntry (IPkgMain x)     = "main = " ++ show x
-showIPackageEntry (IPkgOpts x)     = "opts = " ++ show x
-showIPackageEntry (IPkgMake x)     = "makefile = " ++ show x
-showIPackageEntry (IPkgLibs xs)    = "libs = " ++ show xs
-showIPackageEntry (IPkgObjs xs)    = "objs = " ++ show xs
-
-instance Show IPackageEntry where
-  show = showIPackageEntry
-
--- The file itself.
-data IPkgFile = MkIPkgFile (List IPackageEntry)
-
-showIPkgFile : IPkgFile -> String
-showIPkgFile (MkIPkgFile xs) = show xs
-
-instance Show IPkgFile where
-  show = showIPkgFile
-
--- ------------------------------------------------------------------- [ Utils ]
-
-parseString : Parser String
-parseString = map pack (some (satisfy isAlpha))
-
-parseStringLiteral : Parser String
-parseStringLiteral = char '"' >! parseString <$ char '"'
-
--- ----------------------------------------------------------- [ Parse Entries ]
-
-parseIPkgDec : Parser IPackageEntry
-parseIPkgDec = do
-  string "package"
-  space
-  name <- parseString
-  pure $ IPkgName name
-  <?> "Package Declaration"
-  
-
 -- -------------------------------------------------------------- [ Parse File ]
-mutual
+private
+parseIPkgEntry' : Parser IPackageEntry
+parseIPkgEntry' = parseIPkgModules
+              <|> parseIPkgLibs
+              <|> parseIPkgMake
+              <|> parseIPkgObjs
+              <|> parseIPkgSDir
+              <|> parseIPkgExe
+              <|> parseIPkgMain
+              <|> parseIPkgOpts
+              <?> "Package File Contents"
 
-  parseIPkgEntry : Parser IPackageEntry
-  parseIPkgEntry = parseIPkgDec <?> "Package Entry"
+private
+parseIPkgEntry : Parser IPackageEntry
+parseIPkgEntry = parseIPkgEntry' <$ space
+                 <?> "Lexing Contents"
 
 parseIPkgFile : Parser IPkgFile
 parseIPkgFile = do
   pname <- parseIPkgDec
-  pure $ MkIPkgFile [pname]
+  space
+  content <- many parseIPkgEntry
+  let f = [pname] ++ content
+  pure $ MkIPkgFile f
+  <?> "Parse iPkg File"
+
 -- --------------------------------------------------------------------- [ EOF ]

@@ -1,13 +1,12 @@
 package ipkgparser
 
+modules    = Main, IPkgParser
+
 opts       = "-p lightyear"
 
 sourcedir  = src
 
-executable = idrisPkgParser
+executable = iPkgParser
 main       = Main
 
-modules    = Main,
-
-             IPkgParser
           
