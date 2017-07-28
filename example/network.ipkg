@@ -4,5 +4,4 @@ sourcedir = src
 modules = Network.Socket
 opts = "-p neweffects"
 makefile = MakefileC
-
 objs = bindata.c, bindata.h, idrisnet.c, idrisnet.h

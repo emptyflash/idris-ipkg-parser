@@ -9,48 +9,33 @@ module Utils
 import Lightyear.Core
 import Lightyear.Combinators
 import Lightyear.Strings
+import Lightyear.Char
 
-%access public
+%access public export
 
 identifier : Parser String
-identifier = map pack (some (satisfy isAlpha)) <$ space
-             <?> "Identifier"
-
-comma : Parser ()
-comma = char ',' <$ space
-        <?> "Comma"
-
-equals : Parser ()
-equals = char '=' <$ space
-         <?> "comma"
+identifier = map pack (some (satisfy $ isAlpha)) <?> "Identifier"
 
 -- Inspired by Json.idr in Lightyear examples
 
-private
 specialChar : Parser Char
 specialChar = do
-  c <- satisfy (const True)
+  c <- anyChar
   case c of
     '\\' => pure '\\'
     '/'  => pure '/'
     '.'  => pure '.'
     _    => satisfy (const False)
 
-private
 pathChar : Parser Char
 pathChar = specialChar <|> satisfy isAlpha 
 
 filepath : Parser String
-filepath = map pack (some pathChar) <$ space
-         <?> "filepath"
+filepath = map pack (some pathChar) <?> "filepath"
 
 -- The following is 'inspired' from Bibdris
 
-private
-lit : Char -> Char -> Parser String
-lit l r = char l $> (map pack . many $ satisfy (/= r)) <$ char r
-
 stringLiteral : Parser String
-stringLiteral = lit '"' '"' <?> "string literal"
+stringLiteral = quoted '"' <?> "string literal"
 
 -- --------------------------------------------------------------------- [ EOF ]

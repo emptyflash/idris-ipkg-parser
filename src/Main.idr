@@ -9,16 +9,18 @@ module Main
 import System
 
 import IPkgParser
+import IPkgParser.Model
 import Lightyear.Strings
 
 processArgs : List String -> Maybe String
 processArgs []            = Nothing
 processArgs (_ :: x ::xs) = Just x
+processArgs _             = Nothing
 
 processFile : String -> IO ()
 processFile fname = do
-  contents <- readFile fname
-  case parse parseIPkgFile contents of
+  Right contents <- readFile fname | Left err => (putStrLn $ "Problem reading file: " ++ show err)
+  case Strings.parse parseIPkgFile contents of
     Right res => putStrLn $ show res
     Left err  => putStrLn err
 

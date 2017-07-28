@@ -9,21 +9,21 @@ module IPkgParser
 import Lightyear.Core
 import Lightyear.Combinators
 import Lightyear.Strings
+import Lightyear.Char
 
 import IPkgParser.Model
 import IPkgParser.EntryParser
 
-%access public
+%access public export
 
 -- -------------------------------------------------------------- [ Parse File ]
 
 parseIPkgFile : Parser IPkgFile
 parseIPkgFile = do
   pname <- parseIPkgDec
-  space
-  content <- many (parseIPkgEntry <$ space)
+  spaces
+  content <- many parseIPkgEntry
   let f = [pname] ++ content
-  pure $ MkIPkgFile f
-  <?> "Parse iPkg File"
+  pure (MkIPkgFile f) <?> "Parse iPkg File"
 
 -- --------------------------------------------------------------------- [ EOF ]

@@ -9,27 +9,26 @@ module IPkgParser.EntryParser
 import Lightyear.Core
 import Lightyear.Combinators
 import Lightyear.Strings
+import Lightyear.Char
 
 import IPkgParser.Model
 import IPkgParser.Utils
 
-%access public
+%access public export
 
 parseIPkgDec : Parser IPackageEntry
 parseIPkgDec = do
   string "package"
-  space
+  spaces
   name <- identifier
-  pure (IPkgName name)
-  <?> "Package Declaration"
+  pure (IPkgName name) <?> "Package Declaration"
 
 parseIPkgEntry : Parser IPackageEntry
 parseIPkgEntry = do
   e <- identifier
   space
   equals
-  space
-  case e of
+  let result = case e of
     "main" => do
       fname <- identifier
       pure $ IPkgMain fname
@@ -43,17 +42,17 @@ parseIPkgEntry = do
       name <- identifier
       pure $ IPkgExe name
     "sourcedir" => do
-      dir <- identifier
+      dir <- filepath
       pure $ IPkgSrcDir dir
     "modules" => do
-      ms <- sepBy1 filepath comma
+      ms <- commaSep1 filepath
       pure $ IPkgModules ms
     "objs" => do
-      os <- sepBy1 filepath comma
+      os <- commaSep1 filepath
       pure $ IPkgObjs os
     "libs" => do
-      ls <- sepBy1 filepath comma
+      ls <- commaSep1 filepath
       pure $ IPkgLibs ls
-  <?> "iPkg Entries"
+  result <* spaces <?> "iPkg Entries"
 
 -- --------------------------------------------------------------------- [ EOF ]
