@@ -22,7 +22,7 @@ parseIPkgFile : Parser IPkgFile
 parseIPkgFile = do
   pname <- parseIPkgDec
   spaces
-  content <- many parseIPkgEntry
+  content <- many (parseIPkgEntry <* spaces)
   let f = [pname] ++ content
   pure (MkIPkgFile f) <?> "Parse iPkg File"
 
