@@ -1,8 +1,6 @@
 package ipkgparser
 
-modules    = Main,
-
-             IPkgParser,
+modules    = IPkgParser,
              IPkgParser.EntryParser,
              IPkgParser.Model,
              IPkgParser.Utils
@@ -10,8 +8,5 @@ modules    = Main,
 opts       = "-p lightyear"
 
 sourcedir  = src
-
-executable = iPkgParser
-main       = Main
 
           

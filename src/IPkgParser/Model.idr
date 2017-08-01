@@ -6,7 +6,7 @@
 -- --------------------------------------------------------------------- [ EOH ]
 module IPkgParser.Model
 
-%access public
+%access public export
 
 -- ------------------------------------------------------------ [ iPkg Entries ]
 
@@ -32,7 +32,7 @@ showIPackageEntry (IPkgMake x)     = "makefile = " ++ show x
 showIPackageEntry (IPkgLibs xs)    = "libs = " ++ show xs
 showIPackageEntry (IPkgObjs xs)    = "objs = " ++ show xs
 
-instance Show IPackageEntry where
+Show IPackageEntry where
   show = showIPackageEntry
 
 -- --------------------------------------------------------------- [ iPkg File ]
@@ -44,7 +44,7 @@ data IPkgFile = MkIPkgFile (List IPackageEntry)
 showIPkgFile : IPkgFile -> String
 showIPkgFile (MkIPkgFile xs) = show xs
 
-instance Show IPkgFile where
+Show IPkgFile where
   show = showIPkgFile
 
 
