@@ -20,17 +20,24 @@ data IPackageEntry = IPkgName String
                    | IPkgMake String
                    | IPkgLibs (List String)
                    | IPkgObjs (List String)
+                   | IPkgPkgs (List String)
+
+intercalate' : String -> List String -> String
+intercalate' sep [] = ""
+intercalate' sep [x] = x
+intercalate' sep (x :: xs) = x ++ sep ++ intercalate' sep xs
 
 showIPackageEntry : IPackageEntry -> String
 showIPackageEntry (IPkgName x)     = "package " ++ show x
-showIPackageEntry (IPkgModules xs) = "modules = " ++ show xs
+showIPackageEntry (IPkgModules xs) = "modules = " ++ intercalate' ", " xs
 showIPackageEntry (IPkgSrcDir x)   = "sourcedir = " ++ show x
 showIPackageEntry (IPkgExe x)      = "executable = " ++ show x
 showIPackageEntry (IPkgMain x)     = "main = " ++ show x
 showIPackageEntry (IPkgOpts x)     = "opts = " ++ show x
 showIPackageEntry (IPkgMake x)     = "makefile = " ++ show x
-showIPackageEntry (IPkgLibs xs)    = "libs = " ++ show xs
-showIPackageEntry (IPkgObjs xs)    = "objs = " ++ show xs
+showIPackageEntry (IPkgLibs xs)    = "libs = " ++ intercalate' ", " xs
+showIPackageEntry (IPkgObjs xs)    = "objs = " ++ intercalate' ", " xs
+showIPackageEntry (IPkgPkgs xs)    = "pkgs = " ++ intercalate' ", " xs
 
 Show IPackageEntry where
   show = showIPackageEntry

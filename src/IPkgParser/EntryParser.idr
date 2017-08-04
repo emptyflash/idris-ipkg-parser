@@ -53,6 +53,9 @@ parseIPkgEntry = do
     "libs" => do
       ls <- commaSep1 filepath
       pure $ IPkgLibs ls
+    "pkgs" => do
+      ls <- commaSep1 identifier
+      pure $ IPkgPkgs ls
   result <?> "iPkg Entries"
 
 -- --------------------------------------------------------------------- [ EOF ]
