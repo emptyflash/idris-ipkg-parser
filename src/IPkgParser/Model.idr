@@ -31,7 +31,7 @@ showIPackageEntry (IPkgModules xs) = "modules = " ++ joinWith ", " xs
 showIPackageEntry (IPkgSrcDir x)   = "sourcedir = " ++ x
 showIPackageEntry (IPkgExe x)      = "executable = " ++ x
 showIPackageEntry (IPkgMain x)     = "main = " ++ x
-showIPackageEntry (IPkgOpts x)     = "opts = " ++ x
+showIPackageEntry (IPkgOpts x)     = "opts = " ++ show x
 showIPackageEntry (IPkgMake x)     = "makefile = " ++ x
 showIPackageEntry (IPkgLibs xs)    = "libs = " ++ joinWith ", " xs
 showIPackageEntry (IPkgObjs xs)    = "objs = " ++ joinWith ", " xs
