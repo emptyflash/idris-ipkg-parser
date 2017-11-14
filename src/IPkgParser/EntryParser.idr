@@ -56,6 +56,10 @@ parseIPkgEntry = do
     "pkgs" => do
       ls <- commaSep1 identifier
       pure $ IPkgPkgs ls
+    "tests" => do
+      t <- commaSep1 identifier
+      pure $ IPkgTests t
+    _ => fail $ "unknown ipkg field: " ++ e
   result <?> "iPkg Entries"
 
 -- --------------------------------------------------------------------- [ EOF ]

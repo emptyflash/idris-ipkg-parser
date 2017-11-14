@@ -21,6 +21,7 @@ data IPackageEntry = IPkgName String
                    | IPkgLibs (List String)
                    | IPkgObjs (List String)
                    | IPkgPkgs (List String)
+                   | IPkgTests (List String)
 
 joinWith : String -> List String -> String
 joinWith sep = foldl (++) "" . intersperse sep
@@ -36,6 +37,7 @@ showIPackageEntry (IPkgMake x)     = "makefile = " ++ x
 showIPackageEntry (IPkgLibs xs)    = "libs = " ++ joinWith ", " xs
 showIPackageEntry (IPkgObjs xs)    = "objs = " ++ joinWith ", " xs
 showIPackageEntry (IPkgPkgs xs)    = "pkgs = " ++ joinWith ", " xs
+showIPackageEntry (IPkgTests xs)    = "tests = " ++ joinWith ", " xs
 
 Show IPackageEntry where
   show = showIPackageEntry
